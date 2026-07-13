@@ -51,54 +51,54 @@ def index():
 def predict():
 
     if "image" not in request.files:
-    return render_template("index.html")
+       return render_template("index.html")
 
-file = request.files["image"]
+    file = request.files["image"]
 
     if file.filename == "":
         return render_template("index.html")
 
-    upload_path = os.path.join(
+upload_path = os.path.join(
         app.config["UPLOAD_FOLDER"],
         file.filename
     )
 
-    file.save(upload_path)
+file.save(upload_path)
 
     # -----------------------
     # Read image
     # -----------------------
 
-    image = Image.open(upload_path).convert("RGB")
-    image = image.resize((256, 256))
+image = Image.open(upload_path).convert("RGB")
+image = image.resize((256, 256))
 
-    img = np.array(image, dtype=np.float32) / 255.0
+img = np.array(image, dtype=np.float32) / 255.0
 
-    input_image = np.expand_dims(img, axis=0)
+input_image = np.expand_dims(img, axis=0)
 
     # -----------------------
     # Predict
     # -----------------------
 
-    prediction = model.predict(input_image, verbose=0)[0]
+prediction = model.predict(input_image, verbose=0)[0]
 
-    mask = (prediction > 0.5).astype(np.uint8)
+mask = (prediction > 0.5).astype(np.uint8)
 
-    mask = mask.squeeze()
+mask = mask.squeeze()
 
-    mask = mask * 255
+mask = mask * 255
 
-    filename = os.path.basename(file.filename)
-    prediction_name = "prediction_" + filename
+filename = os.path.basename(file.filename)
+prediction_name = "prediction_" + filename
 
-    prediction_path = os.path.join(
+prediction_path = os.path.join(
         app.config["PREDICTION_FOLDER"],
         prediction_name
     )
 
-    cv2.imwrite(prediction_path, mask)
+cv2.imwrite(prediction_path, mask)
 
-    return render_template(
+   return render_template(
         "index.html",
         original=upload_path,
         prediction=prediction_path

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dental Tooth Segmentation</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Dental Tooth Segmentation Using U-Net</h1>
+
+    <p>
+        Upload a panoramic dental radiograph to generate an automatic tooth segmentation mask.
+    </p>
+
+    <form action="/predict" method="POST" enctype="multipart/form-data">
+
+        <input
+            type="file"
+            name="image"
+            accept=".png,.jpg,.jpeg"
+            required
+        >
+
+        <br><br>
+
+        <button type="submit">
+            Segment Teeth
+        </button>
+
+    </form>
+
+    {% if original %}
+
+    <div class="results">
+
+        <div class="card">
+
+            <h2>Original Dental X-ray</h2>
+
+            <img
+                src="{{ original }}"
+                alt="Original Dental X-ray"
+            >
+
+        </div>
+
+        <div class="card">
+
+            <h2>Predicted Segmentation Mask</h2>
+
+            <img
+                src="{{ prediction }}"
+                alt="Predicted Tooth Segmentation"
+            >
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+
+</html>
